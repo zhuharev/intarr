@@ -8,6 +8,7 @@ import (
 	"github.com/golang/snappy"
 	"github.com/reducedb/encoding/cursor"
 	"github.com/zhenjl/encoding/delta/bp32"
+	"io"
 )
 
 func Pack(in []int32) (r []byte, e error) {
@@ -145,6 +146,18 @@ func is2b(s Slice) ([]byte, error) {
 		}
 	}
 	return w.Bytes(), nil
+}
+
+func b2is(b []byte) (s Slice, e error) {
+	r := bytes.NewReader(b)
+	var i int32
+	for e = binary.Read(r, binary.BigEndian, &i); e == nil; e = binary.Read(r, binary.BigEndian, &i) {
+		s = append(s, i)
+	}
+	if e == io.EOF {
+		e = nil
+	}
+	return
 }
 
 func gz(data []byte) ([]byte, error) {
