@@ -10,6 +10,10 @@ func New(arr interface{}) (s Slice) {
 		}
 	case []int32:
 		return Slice(arr.([]int32))
+	case []int64:
+		for _, v := range arr.([]int64) {
+			s = append(s, int32(v))
+		}
 	/*case []byte:
 	s, e = Decode(arr.([]byte))
 	return*/
@@ -34,4 +38,21 @@ func (sl Slice) In(i int32) bool {
 		}
 	}
 	return false
+}
+
+func (sl Slice) Int64() (res []int64) {
+	for _, i := range sl {
+		res = append(res, int64(i))
+	}
+	return
+}
+
+func (sl Slice) Remove(num int32) (res Slice) {
+	for i, v := range sl {
+		if v == num {
+			res = append(sl[:i], sl[i+1:]...)
+			return
+		}
+	}
+	return sl
 }
