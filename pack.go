@@ -162,7 +162,7 @@ func b2is(b []byte) (s Slice, e error) {
 
 func gz(data []byte) ([]byte, error) {
 	w := bytes.NewBuffer(nil)
-	gw, e := gzip.NewWriterLevel(w, gzip.BestCompression)
+	gw, e := gzip.NewWriterLevel(w, gzip.BestSpeed)
 	if e != nil {
 		return nil, e
 	}
@@ -174,12 +174,32 @@ func gz(data []byte) ([]byte, error) {
 	return w.Bytes(), e
 }
 
+func ungz(data []byte) ([]byte, error) {
+	r := bytes.NewReader(data)
+	gr, e := gzip.NewReader(r)
+	if e != nil {
+		return nil, e
+	}
+	var res []byte
+	buf := bytes.NewBuffer(res)
+	_, e = io.Copy(buf, gr)
+	return res, e
+}
+
 func PackGzip(s Slice) ([]byte, error) {
 	b, e := is2b(s)
 	if e != nil {
 		return nil, e
 	}
 	return gz(b)
+}
+
+func UnpackGzip(data []byte) (Slice, error) {
+	bts, e := ungz(data)
+	if e != nil {
+		return Slice{}, e
+	}
+	return b2is(bts)
 }
 
 func snap(arr []byte) ([]byte, error) {
