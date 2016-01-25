@@ -27,4 +27,17 @@ func TestEncodeDecode(t *testing.T) {
 			So(v, ShouldEqual, s[k])
 		}
 	})
+
+	Convey("test gzip", t, func() {
+		bts, e := PackGzip(s)
+		So(e, ShouldBeNil)
+		So(len(bts), ShouldBeGreaterThan, 20)
+
+		sl, e := UnpackGzip(bts)
+		So(e, ShouldBeNil)
+		for i, v := range sl {
+			So(v, ShouldEqual, s[i])
+		}
+
+	})
 }

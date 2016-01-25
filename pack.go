@@ -180,10 +180,9 @@ func ungz(data []byte) ([]byte, error) {
 	if e != nil {
 		return nil, e
 	}
-	var res []byte
-	buf := bytes.NewBuffer(res)
+	buf := bytes.NewBuffer(nil)
 	_, e = io.Copy(buf, gr)
-	return res, e
+	return buf.Bytes(), e
 }
 
 func PackGzip(s Slice) ([]byte, error) {
