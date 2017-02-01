@@ -40,6 +40,13 @@ func (sl Slice) In(i int32) bool {
 	return false
 }
 
+func (sl Slice) AsInt() (res []int) {
+	for _, i := range sl {
+		res = append(res, int(i))
+	}
+	return
+}
+
 func (sl Slice) Int64() (res []int64) {
 	for _, i := range sl {
 		res = append(res, int64(i))
